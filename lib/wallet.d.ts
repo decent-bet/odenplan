@@ -1,9 +1,9 @@
 import { KeyHandler, KeyStore } from '@decent-bet/webcrypto-keychain';
 export interface VendorWallet {
     getAccountKey(address: string, passphrase?: string): Promise<string>;
-    configurePassphrase(passphrase: string): any;
-    enable(): any;
-    askPassphrase(passphrase: string): any;
+    configurePassphrase(passphrase: string): void;
+    enable(): void;
+    askPassphrase(passphrase: string): void;
     subscribeToAskPassphrase: () => Promise<void>;
     subscribeToSigning: () => Promise<void>;
 }
