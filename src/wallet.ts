@@ -9,9 +9,9 @@ export interface VendorWallet {
     enable(): void;
     askPassphrase(passphrase: string): void;
     // Callback to set passphrase
-    subscribeToAskPassphrase: () => Promise<void>;
+    subscribeToAskPassphrase: () => Promise<any>;
     // Callback to approve or reject signing
-    subscribeToSigning: () => Promise<void>;
+    subscribeToSigning: () => Promise<any>;
 }
 
 export class ReadOnlyWallet implements VendorWallet {
@@ -53,10 +53,10 @@ export class Wallet implements VendorWallet {
     askPassphraseValue: string;
 
     // Callback to set passphrase
-    subscribeToAskPassphrase: () => Promise<void>;
+    subscribeToAskPassphrase: () => Promise<any>;
 
     // Callback to approve or reject signing
-    subscribeToSigning: () => Promise<void>;
+    subscribeToSigning: () => Promise<any>;
 
     async enable() {
         if (this.subscribeToAskPassphrase) {
