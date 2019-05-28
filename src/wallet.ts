@@ -7,7 +7,6 @@ export interface VendorWallet {
     getAccountKey(address: string, passphrase?: string): Promise<string>;
     configurePassphrase(passphrase: string): void;
     enable(): void;
-    askPassphrase(passphrase: string): void;
     // Callback to set passphrase
     subscribeToAskPassphrase: () => Promise<any>;
     // Callback to approve or reject signing
@@ -26,9 +25,7 @@ export class ReadOnlyWallet implements VendorWallet {
     enable() {
         return true;
     }
-    askPassphrase(passphrase: string) {
-        this.askPassphraseValue = passphrase;
-    }
+
     // Callback to set passphrase    
     subscribeToAskPassphrase: () => Promise<void>;
 
@@ -64,11 +61,6 @@ export class Wallet implements VendorWallet {
         }
     }
 
-    askPassphrase(passphrase: string) {
-        // TODO: Unlocked required
-        this.askPassphraseValue = passphrase;
-    }
-
     /**
      * Sets a passphrase for the wallet
      * @param passphrase Passphrase
@@ -82,10 +74,13 @@ export class Wallet implements VendorWallet {
     }
 
     async validatePassphrase(passphrase: string, promiseFn: Promise<any>) {
-        let comparePassphrase = this.askPassphraseValue;
-        if (!this.askPassphrase) {
-            comparePassphrase = await this.keyHandler.readSecureValue('passphrase');
+        if (!passphrase) {
+            const compareUserPassphrase = await this.subscribeToAskPassphrase();
+            passphrase = compareUserPassphrase;
         }
+        // Read from store
+        const comparePassphrase = await this.keyHandler.getSecureValue('passphrase');
+
         if (passphrase === comparePassphrase) {
             // Read value
             return await promiseFn;
@@ -101,7 +96,7 @@ export class Wallet implements VendorWallet {
     async getAccountKey(address: string, passphrase?: string): Promise<string> {
         return await this.validatePassphrase(
             passphrase,
-            this.keyHandler.readSecureValue(address)
+            this.keyHandler.getSecureValue(address)
         );
     }
 

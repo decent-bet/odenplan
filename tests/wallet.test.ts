@@ -26,14 +26,14 @@ test('should throw error if passphrase less than 10', async () => {
 test('should create a Vechain Wallet and return public address', async () => {
     KeyHandler.mockImplementation(() => {
         return {
-            readSecureValue: jest.fn().mockReturnValue('q2w3e4r5t6y7'),
+            getSecureValue: jest.fn().mockReturnValue('q2w3e4r5t6y7'),
             writeSecureValue: jest.fn().mockReturnValue(Promise.resolve()),
         };
     });
 
     let wallet = new Wallet();
     const response = await wallet.createAccount('q2w3e4r5t6y7');
-    expect(wallet.keyHandler.readSecureValue).toHaveBeenCalled();
+    expect(wallet.keyHandler.getSecureValue).toHaveBeenCalled();
     expect(wallet.keyHandler.writeSecureValue).toHaveBeenCalled();
     expect(response.publicAddress).toContain('0x');
 });
@@ -42,10 +42,10 @@ test('should get an account private key', async () => {
     const address = '0x4B94d6E1ABa9c85e5a9cBc82856DC77d5b558E5d';
     KeyHandler.mockImplementation(() => {
         return {
-            readSecureValue: jest.fn().mockReturnValue('q2w3e4r5t6y7'),
+            getSecureValue: jest.fn().mockReturnValue('q2w3e4r5t6y7'),
         };
     });
     let wallet = new Wallet();
     const response = await wallet.getAccountKey(address, 'q2w3e4r5t6y7');
-    expect(wallet.keyHandler.readSecureValue).toBeCalledTimes(2);
+    expect(wallet.keyHandler.getSecureValue).toBeCalledTimes(2);
 });
