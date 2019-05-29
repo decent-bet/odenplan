@@ -1,12 +1,16 @@
-# odenplan
-A VET  Wallet library
 
-## Install
+odenplan
+========
+
+A VET Wallet library
+
+Install
+-------
 
 `npm i -S @decent-bet/odenplan`
 
-
-## Usage
+Usage
+-----
 
 ### Configure wallet passphrase
 
@@ -16,7 +20,8 @@ await wallet.configurePassphrase('q2w3e4r5t6y7');
 
 ```
 
-## Subscribe to ask passphrase
+Subscribe to ask passphrase
+---------------------------
 
 ```typescript
 wallet.subscribeToAskPassphrase = new Promise((resolve, reject) => {
@@ -24,7 +29,8 @@ wallet.subscribeToAskPassphrase = new Promise((resolve, reject) => {
 });
 ```
 
-## Create a wallet account
+Create a wallet account
+-----------------------
 
 ```typescript
 // if passphrase not set, it will ask for passphrase using subscribeToAskPassphrase
@@ -34,15 +40,16 @@ const { publicAddress } = await wallet.createAccount();
 const { publicAddress, mnemonic } = await wallet.createAccount(null, true);
 ```
 
-
-## Registers a wallet account
+Registers a wallet account
+--------------------------
 
 ```typescript
 // if user owns a private key, use registerAccount to import wallet
 await wallet.registerAccount(address, privateKey, passphrase);
 ```
 
-## Subscribe to ask passphrase
+Subscribe to ask passphrase
+---------------------------
 
 ```typescript
 wallet.subscribeToAskPassphrase = new Promise((resolve, reject) => {
@@ -50,7 +57,8 @@ wallet.subscribeToAskPassphrase = new Promise((resolve, reject) => {
 });
 ```
 
-## Get account key (used with connex)
+Get account key (used with connex)
+----------------------------------
 
 ```typescript
 let wallet = new Wallet();
@@ -59,6 +67,37 @@ let wallet = new Wallet();
 const response = await wallet.getAccountKey(address, 'q2w3e4r5t6y7');
 ```
 
-## Documentation
+Documentation
+-------------
 
 [API Documentation](/docs/README.md)
+
+## Index
+
+### Classes
+
+* [ReadOnlyWallet](classes/readonlywallet.md)
+* [Wallet](classes/wallet.md)
+
+### Interfaces
+
+* [VendorWallet](interfaces/vendorwallet.md)
+
+### Variables
+
+* [VET_DERIVATION](#vet_derivation)
+
+---
+
+## Variables
+
+<a id="vet_derivation"></a>
+
+### `<Const>` VET_DERIVATION
+
+**● VET_DERIVATION**: *"m/44&#x27;/818&#x27;/0&#x27;/0/0"* =  `m/44'/818'/0'/0/0`
+
+*Defined in [wallet.ts:4](https://github.com/decent-bet/odenplan/blob/7c1275c/src/wallet.ts#L4)*
+
+___
+
