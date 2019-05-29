@@ -3,34 +3,64 @@ import { ethers } from 'ethers';
 import * as bip39 from 'bip39';
 const VET_DERIVATION = `m/44'/818'/0'/0/0`;
 
+/**
+ * VendorWallet is an interface to integrate with Connex
+ */
 export interface VendorWallet {
+    /**
+     * Used by tx and cert signer, obtains a private key given a passphrase, if not set, subscribeToAskPassphrase will be called
+     * @param address A public address
+     * @param passphrase Passphrase to unlock
+     */
     getAccountKey(address: string, passphrase?: string): Promise<string>;
+
+    /**
+     * Configures a passphrase to lock and unlock keys
+     * @param passphrase A passphrase
+     */
     configurePassphrase(passphrase: string): void;
-    enable(): void;
-    // Callback to set passphrase
+
+    /**
+     * Callback to set passphrase
+     */
     subscribeToAskPassphrase: () => Promise<any>;
-    // Callback to approve or reject signing
+
+    /**
+     * Callback to approve or reject signing
+     */
     subscribeToSigning: () => Promise<any>;
 }
 
+/**
+ * A read only wallet used for Connex.
+ */
 export class ReadOnlyWallet implements VendorWallet {
+    /**
+     * Used by tx and cert signer, obtains a private key given a passphrase, if not set, subscribeToAskPassphrase will be called
+     * @param address A public address
+     * @param passphrase Passphrase to unlock
+     */
     getAccountKey(address: string, passphrase?: string): Promise<string> {
         throw new Error('This is a read only wallet, cannot get key to sign transactions');
     }
 
+    /**
+     * Configures a passphrase to lock and unlock keys
+     * @param passphrase A passphrase
+     */
     configurePassphrase(passphrase: string) {
         return passphrase;
     }
 
-    enable() {
-        return true;
-    }
+    /**
+     * Callback to set passphrase
+     */
+    subscribeToAskPassphrase: () => Promise<string>;
 
-    // Callback to set passphrase    
-    subscribeToAskPassphrase: () => Promise<void>;
-
-    // Callback to approve or reject signing
-    subscribeToSigning: () => Promise<void>;
+    /**
+     * Callback to approve or reject signing
+     */
+    subscribeToSigning: () => Promise<string>;
 
     askPassphraseValue: string;
 }
@@ -49,21 +79,26 @@ export class Wallet implements VendorWallet {
 
     askPassphraseValue: string;
 
-    // Callback to set passphrase
-    subscribeToAskPassphrase: () => Promise<any>;
-
-    // Callback to approve or reject signing
-    subscribeToSigning: () => Promise<any>;
-
-    async enable() {
-        if (this.subscribeToAskPassphrase) {
-            await this.subscribeToAskPassphrase();
-        }
-    }
+    /**
+     * Callback to set passphrase
+     */
+    subscribeToAskPassphrase: () => Promise<string>;
 
     /**
-     * Sets a passphrase for the wallet
-     * @param passphrase Passphrase
+     * Callback to approve or reject signing
+     */
+    subscribeToSigning: () => Promise<string>;
+
+
+    // async enable() {
+    //     if (this.subscribeToAskPassphrase) {
+    //         await this.subscribeToAskPassphrase();
+    //     }
+    // }
+
+    /**
+     * Configures a passphrase to lock and unlock keys
+     * @param passphrase A passphrase
      */
     configurePassphrase(passphrase: string) {
         // TODO: Add passphrase complexity check here
@@ -73,7 +108,13 @@ export class Wallet implements VendorWallet {
         return this.keyHandler.writeSecureValue('passphrase', passphrase);
     }
 
+    /**
+     * Asks for passphrase and if succesful, executes promise
+     * @param passphrase 
+     * @param promiseFn 
+     */
     async validatePassphrase(passphrase: string, promiseFn: Promise<any>) {
+        const temp = passphrase;
         if (!passphrase) {
             const compareUserPassphrase = await this.subscribeToAskPassphrase();
             passphrase = compareUserPassphrase;
@@ -88,10 +129,11 @@ export class Wallet implements VendorWallet {
             throw new Error('Invalid passphrase');
         }
     }
+
     /**
-     * Reads a private key given a public address
-     * @param address public address
-     * @param passphrase passphrase for the wallet
+     * Used by tx and cert signer, obtains a private key given a passphrase, if not set, subscribeToAskPassphrase will be called
+     * @param address A public address
+     * @param passphrase Passphrase to unlock
      */
     async getAccountKey(address: string, passphrase?: string): Promise<string> {
         return await this.validatePassphrase(
@@ -125,7 +167,7 @@ export class Wallet implements VendorWallet {
      * Create account and returns a public address
      * @param canReturnMnemonicValue Set to true if mnemonic should be in the result
      */
-    async internalCreateAccount(canReturnMnemonicValue?: boolean) {
+    private async internalCreateAccount(canReturnMnemonicValue?: boolean) {
         const mnemonic = bip39.generateMnemonic();
         const wallet = ethers.Wallet.fromMnemonic(mnemonic, VET_DERIVATION);
 
@@ -145,6 +187,11 @@ export class Wallet implements VendorWallet {
         };
     }
 
+    /**
+     * Creates a new account
+     * @param passphrase Passphrase
+     * @param canReturnMnemonicValue Returns mnemonic if set to true, defauls to false
+     */
     async createAccount(passphrase?: string, canReturnMnemonicValue?: boolean) {
         return await this.validatePassphrase(
             passphrase,

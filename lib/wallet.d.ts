@@ -2,18 +2,14 @@ import { KeyHandler, KeyStore } from '@decent-bet/webcrypto-keychain';
 export interface VendorWallet {
     getAccountKey(address: string, passphrase?: string): Promise<string>;
     configurePassphrase(passphrase: string): void;
-    enable(): void;
-    askPassphrase(passphrase: string): void;
     subscribeToAskPassphrase: () => Promise<any>;
     subscribeToSigning: () => Promise<any>;
 }
 export declare class ReadOnlyWallet implements VendorWallet {
     getAccountKey(address: string, passphrase?: string): Promise<string>;
     configurePassphrase(passphrase: string): string;
-    enable(): boolean;
-    askPassphrase(passphrase: string): void;
-    subscribeToAskPassphrase: () => Promise<void>;
-    subscribeToSigning: () => Promise<void>;
+    subscribeToAskPassphrase: () => Promise<string>;
+    subscribeToSigning: () => Promise<string>;
     askPassphraseValue: string;
 }
 export declare class Wallet implements VendorWallet {
@@ -21,21 +17,13 @@ export declare class Wallet implements VendorWallet {
     keyHandler: KeyHandler;
     constructor();
     askPassphraseValue: string;
-    subscribeToAskPassphrase: () => Promise<any>;
-    subscribeToSigning: () => Promise<any>;
-    enable(): Promise<void>;
-    askPassphrase(passphrase: string): void;
+    subscribeToAskPassphrase: () => Promise<string>;
+    subscribeToSigning: () => Promise<string>;
     configurePassphrase(passphrase: string): any;
     validatePassphrase(passphrase: string, promiseFn: Promise<any>): Promise<any>;
     getAccountKey(address: string, passphrase?: string): Promise<string>;
     getAccounts(): Promise<string[]>;
     registerAccount(address: string, privateKey: string, passphrase?: string): Promise<any>;
-    internalCreateAccount(canReturnMnemonicValue?: boolean): Promise<{
-        publicAddress: string;
-        mnemonic: string;
-    } | {
-        publicAddress: string;
-        mnemonic?: undefined;
-    }>;
+    private internalCreateAccount;
     createAccount(passphrase?: string, canReturnMnemonicValue?: boolean): Promise<any>;
 }
