@@ -4,11 +4,11 @@ import { promisify } from 'util';
 import { fromEvent } from 'rxjs';
 
 export interface IWalletConnectDappProvider {
-    processTransaction(txParams, cb: () => {}): Promise<void>;
-    processSignTransaction(txParams, cb: () => {}): Promise<void>;
-    processMessage(msgParams, cb: () => {}): Promise<void>;
-    processPersonalMessage(msgParams, cb: () => {}): Promise<void>;
-    processTypedMessage(msgParams, cb: () => {}): Promise<void>;
+    processTransaction(txParams): Promise<WalletConnect>;
+    processSignTransaction(txParams): Promise<WalletConnect>;
+    processMessage(msgParams): Promise<WalletConnect>;
+    processPersonalMessage(msgParams): Promise<WalletConnect>;
+    processTypedMessage(msgParams): Promise<WalletConnect>;
     getAccounts(cb: () => {}): Promise<void>;
     send(payload, callback): Promise<any>;
     enable(): Promise<any>;
@@ -35,53 +35,48 @@ export class WalletConnectImpl implements IWalletConnectDappProvider {
         this.isWalletConnect = true;
     }
 
-    async processTransaction(txParams: any, cb): Promise<void> {
+    async processTransaction(txParams: any): Promise<WalletConnect> {
         const walletConnector = await this.getWalletConnector()
         try {
-            const result = await walletConnector.sendTransaction(txParams)
-            cb(null, result);
+            return await walletConnector.sendTransaction(txParams)
         } catch (error) {
-            cb(error);
+            throw error;
         }
     }
 
-    async processSignTransaction(txParams: any, cb): Promise<void> {
+    async processSignTransaction(txParams: any): Promise<WalletConnect> {
         const walletConnector = await this.getWalletConnector()
         try {
-            const result = await walletConnector.signTransaction(txParams)
-            cb(null, result);
+            return await walletConnector.signTransaction(txParams)
         } catch (error) {
-            cb(error);
+            throw error;
         }
     }
 
-    async processMessage(msgParams: any, cb): Promise<void> {
+    async processMessage(msgParams: any): Promise<WalletConnect> {
         const walletConnector = await this.getWalletConnector()
         try {
-            const result = await walletConnector.signMessage(msgParams)
-            cb(null, result);
+            return await walletConnector.signMessage(msgParams)
         } catch (error) {
-            cb(error);
+            throw error;
         }
     }
 
-    async processPersonalMessage(msgParams: any, cb): Promise<void> {
+    async processPersonalMessage(msgParams: any): Promise<WalletConnect> {
         const walletConnector = await this.getWalletConnector()
         try {
-            const result = await walletConnector.signPersonalMessage(msgParams)
-            cb(null, result);
+            return await walletConnector.signPersonalMessage(msgParams)
         } catch (error) {
-            cb(error);
+            throw error;
         }
     }
 
-    async processTypedMessage(msgParams: any, cb): Promise<void> {
+    async processTypedMessage(msgParams: any): Promise<WalletConnect> {
         const walletConnector = await this.getWalletConnector()
         try {
-            const result = await walletConnector.signTypedData(msgParams)
-            cb(null, result);
+            return await walletConnector.signTypedData(msgParams)
         } catch (error) {
-            cb(error);
+            throw error;
         }
     }
 
