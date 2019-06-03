@@ -11,7 +11,7 @@ A VET  Wallet library
 ### Configure wallet passphrase
 
 ```typescript
-const wallet = new Wallet();    
+const wallet = new ConnexVendorWallet();    
 await wallet.configurePassphrase('q2w3e4r5t6y7');
 
 ```
@@ -53,11 +53,20 @@ wallet.subscribeToAskPassphrase = new Promise((resolve, reject) => {
 ## Get account key (used with connex)
 
 ```typescript
-let wallet = new Wallet();
+let wallet = new ConnexVendorWallet();
 
 // leave last parameter as null if used with an UI, used subscribeToAskPassphrase
 const response = await wallet.getAccountKey(address, 'q2w3e4r5t6y7');
 ```
+
+
+## Wallet implementations
+
+* `ConnexVendorWallet`: Support for Connex (pull signing / client requested).
+* `ConnexWCVendorWallet`: Support for Connex for React Native (push signing / WalletConnect requested).
+* `ReadOnlyWallet`: Support for non signing use cases.
+
+> Note: Subscribe to `wallet.onSigningRequested` when using `ConnexWCVendorWallet`.
 
 ## Documentation
 
