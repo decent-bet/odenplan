@@ -5,13 +5,6 @@ export interface VendorWallet {
     subscribeToAskPassphrase: () => Promise<any>;
     subscribeToSigning: () => Promise<any>;
 }
-export declare class ReadOnlyWallet implements VendorWallet {
-    getAccountKey(address: string, passphrase?: string): Promise<string>;
-    configurePassphrase(passphrase: string): string;
-    subscribeToAskPassphrase: () => Promise<string>;
-    subscribeToSigning: () => Promise<string>;
-    askPassphraseValue: string;
-}
 export declare class Wallet implements VendorWallet {
     keyStore: KeyStore;
     keyHandler: KeyHandler;
