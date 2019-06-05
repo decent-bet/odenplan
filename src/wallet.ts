@@ -31,39 +31,7 @@ export interface VendorWallet {
     subscribeToSigning: () => Promise<any>;
 }
 
-/**
- * A read only wallet used for Connex.
- */
-export class ReadOnlyWallet implements VendorWallet {
-    /**
-     * Used by tx and cert signer, obtains a private key given a passphrase, if not set, subscribeToAskPassphrase will be called
-     * @param address A public address
-     * @param passphrase Passphrase to unlock
-     */
-    getAccountKey(address: string, passphrase?: string): Promise<string> {
-        throw new Error('This is a read only wallet, cannot get key to sign transactions');
-    }
 
-    /**
-     * Configures a passphrase to lock and unlock keys
-     * @param passphrase A passphrase
-     */
-    configurePassphrase(passphrase: string) {
-        return passphrase;
-    }
-
-    /**
-     * Callback to set passphrase
-     */
-    subscribeToAskPassphrase: () => Promise<string>;
-
-    /**
-     * Callback to approve or reject signing
-     */
-    subscribeToSigning: () => Promise<string>;
-
-    askPassphraseValue: string;
-}
 /**
  * A simple VET wallet
  */

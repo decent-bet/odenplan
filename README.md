@@ -11,7 +11,7 @@ A VET  Wallet library
 ### Configure wallet passphrase
 
 ```typescript
-const wallet = new ConnexVendorWallet();    
+const wallet = new ProviderWallet();    
 await wallet.configurePassphrase('q2w3e4r5t6y7');
 
 ```
@@ -53,20 +53,90 @@ wallet.subscribeToAskPassphrase = new Promise((resolve, reject) => {
 ## Get account key (used with connex)
 
 ```typescript
-let wallet = new ConnexVendorWallet();
+let wallet = new ProviderWallet();
 
 // leave last parameter as null if used with an UI, used subscribeToAskPassphrase
 const response = await wallet.getAccountKey(address, 'q2w3e4r5t6y7');
 ```
 
 
-## Wallet implementations
+## Wallet behaviors
 
-* `ConnexVendorWallet`: Support for Connex (pull signing / client requested).
-* `ConnexWCVendorWallet`: Support for Connex for React Native (push signing / WalletConnect requested).
-* `ReadOnlyWallet`: Support for non signing use cases.
+### Browser
 
-> Note: Subscribe to `wallet.onSigningRequested` when using `ConnexWCVendorWallet`.
+Use browser behavior for web based DApps solutions. Odenplan will handle private key access through the use of a passphrase.
+
+```typescript
+const wallet = new ProviderWallet({
+    behaviorType: 'browser',
+});
+
+await wallet.configurePassphrase('q1212a');
+```
+
+### Query
+
+Similar to a browser behavior but does not enable signing. Useful when you only need query type applications.
+
+```typescript
+const wallet = new ProviderWallet({
+    behaviorType: 'query',
+});
+```
+
+### Server
+
+For microservices use cases, obviates the need for a passphrase. Any implementation should secure the private key in either HSM or secure storage.
+
+```typescript
+const wallet = new ProviderWallet({
+    behaviorType: 'server',
+    behaviorOptions: {
+        privateKey: '0x64adbb3bd3b4c862479fd21d3a7555071e38c12c915b8b14ddd7ae4f1ba8e93c'
+    }
+});
+```
+
+### WalletConnect
+
+A WalletConnect behavior to be used in React Native DApps (or similar). Manages the Wallet role in WalletConnect.
+
+```typescript
+const wallet = new ProviderWallet({
+    behaviorType: 'walletconnect',
+    behaviorOptions: {
+        walletconnect: new WalletConnect({
+            bridge: "https://bridge.walletconnect.org"
+        })
+    }
+});
+
+// Subscribe to eth_signTransaction
+wallet.onSigningRequest.on('SIGN_TX', (params: any[]) => {
+    // ... sign tx code goes here
+});
+
+// Subscribe to eth_sendTransaction
+wallet.onSigningRequest.on('SEND_TX', (params: any[]) => {
+    // ... send tx code goes here
+});
+```
+
+## Wallet handlers
+
+### Connex
+
+A Connex interface should call `processSigningRequest` by sending the address to lookup the private key and a Promise action to be executed.
+
+```typescript
+export interface IOdenplanConnexSigning {
+    processSigningRequest(options: { 
+        address: string,
+        signingAction: (pvk: any) => Promise<any>,
+    }): Promise<any>;
+}
+```
+
 
 ## Documentation
 

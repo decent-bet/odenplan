@@ -6,9 +6,12 @@ import { IJsonRpcRequest } from '@walletconnect/types';
 
 export interface ProviderWalletOptions {
     behaviorType: 'server' | 'browser' | 'query' | 'walletconnect',
-    behaviorOptions: any;
+    behaviorOptions?: { walletconnect?: WalletConnect, privateKey?: string };
 }
 
+/**
+ * Provider Wallet
+ */
 export class ProviderWallet
     extends Wallet
     implements IOdenplanConnexSigning {
@@ -25,6 +28,7 @@ export class ProviderWallet
         if (options.behaviorType === 'walletconnect') {
             this.walletConnector = options.behaviorOptions.walletconnect;
             this.walletConnector.on('call_request', this.handleCallRequests);
+            this.onSigningRequest = new EventEmitter();
         } else if (options.behaviorType === 'query') {
             this.isReadOnly = true;
         } else if (options.behaviorType === 'server') {
@@ -42,7 +46,7 @@ export class ProviderWallet
         if (this.isReadOnly) {
             throw new Error('This is a read only wallet, cannot get key to sign transactions');
         } else if (this.isServer) {
-            return this.privateKey;
+            return Promise.resolve(this.privateKey);
         }
         return super.getAccountKey(address, passphrase);
     }

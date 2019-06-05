@@ -10,7 +10,7 @@ VendorWallet is an interface to integrate with Connex
 
 ## Implemented by
 
-* [ReadOnlyWallet](../classes/readonlywallet.md)
+* [ProviderWallet](../classes/providerwallet.md)
 * [Wallet](../classes/wallet.md)
 
 ## Index
@@ -35,7 +35,7 @@ VendorWallet is an interface to integrate with Connex
 
 **● subscribeToAskPassphrase**: *`function`*
 
-*Defined in [wallet.ts:26](https://github.com/decent-bet/odenplan/blob/7c1275c/src/wallet.ts#L26)*
+*Defined in [wallet.ts:26](https://github.com/decent-bet/odenplan/blob/95a0049/src/wallet.ts#L26)*
 
 Callback to set passphrase
 
@@ -51,7 +51,7 @@ ___
 
 **● subscribeToSigning**: *`function`*
 
-*Defined in [wallet.ts:31](https://github.com/decent-bet/odenplan/blob/7c1275c/src/wallet.ts#L31)*
+*Defined in [wallet.ts:31](https://github.com/decent-bet/odenplan/blob/95a0049/src/wallet.ts#L31)*
 
 Callback to approve or reject signing
 
@@ -70,7 +70,7 @@ ___
 
 ▸ **configurePassphrase**(passphrase: *`string`*): `void`
 
-*Defined in [wallet.ts:21](https://github.com/decent-bet/odenplan/blob/7c1275c/src/wallet.ts#L21)*
+*Defined in [wallet.ts:21](https://github.com/decent-bet/odenplan/blob/95a0049/src/wallet.ts#L21)*
 
 Configures a passphrase to lock and unlock keys
 
@@ -89,7 +89,7 @@ ___
 
 ▸ **getAccountKey**(address: *`string`*, passphrase?: *`string`*): `Promise`<`string`>
 
-*Defined in [wallet.ts:15](https://github.com/decent-bet/odenplan/blob/7c1275c/src/wallet.ts#L15)*
+*Defined in [wallet.ts:15](https://github.com/decent-bet/odenplan/blob/95a0049/src/wallet.ts#L15)*
 
 Used by tx and cert signer, obtains a private key given a passphrase, if not set, subscribeToAskPassphrase will be called
 
