@@ -6,7 +6,7 @@ import { EventEmitter } from 'events';
 import { IJsonRpcRequest } from '@walletconnect/types';
 export interface ProviderWalletOptions {
     behaviorType: 'server' | 'browser' | 'query' | 'walletconnect';
-    behaviorOptions: {
+    behaviorOptions?: {
         walletconnect?: WalletConnect;
         privateKey?: string;
     };

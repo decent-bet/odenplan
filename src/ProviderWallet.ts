@@ -27,7 +27,7 @@ export class ProviderWallet
 
         if (options.behaviorType === 'walletconnect') {
             this.walletConnector = options.behaviorOptions.walletconnect;
-            this.walletConnector.on('call_request', this.handleCallRequests);
+            this.walletConnector.on('call_request', this.handleCallRequests.bind(this));
             this.onSigningRequest = new EventEmitter();
         } else if (options.behaviorType === 'query') {
             this.isReadOnly = true;
@@ -54,7 +54,7 @@ export class ProviderWallet
 
     /**
      * Configures a passphrase to lock and unlock keys
-     * @param passphrase A passphrase
+     * @param p     assphrase A passphrase
      */
     configurePassphrase(passphrase: string) {
         if (this.isReadOnly) {
