@@ -1,24 +1,90 @@
-import WalletConnect from '@walletconnect/browser'
-import { ITxData, IJsonRpcRequest } from '@walletconnect/types';
 import { Wallet } from './wallet';
 import { IOdenplanConnexSigning } from './IOdenplanConnexSigning';
+import WalletConnect from '@walletconnect/browser';
 import { EventEmitter } from 'events';
-import { ConnexVendorWallet } from './ConnexVendorWallet';
+import { IJsonRpcRequest } from '@walletconnect/types';
 
-export class ConnexWCVendorWallet extends ConnexVendorWallet
+export interface ProviderWalletOptions {
+    behaviorType: 'server' | 'browser' | 'query' | 'walletconnect',
+    behaviorOptions: any;
+}
+
+export class ProviderWallet
+    extends Wallet
     implements IOdenplanConnexSigning {
 
-    walletConnector: WalletConnect;
+    walletConnector: WalletConnect
+    onSigningRequest: EventEmitter;
+    isReadOnly: boolean;
+    privateKey: any;
+    isServer: boolean;
 
-    constructor(walletConnect: WalletConnect) {
+    constructor(options: ProviderWalletOptions) {
         super();
-        this.walletConnector = walletConnect;
-        this.walletConnector.on('call_request', this.handleCallRequests);
+
+        if (options.behaviorType === 'walletconnect') {
+            this.walletConnector = options.behaviorOptions.walletconnect;
+            this.walletConnector.on('call_request', this.handleCallRequests);
+        } else if (options.behaviorType === 'query') {
+            this.isReadOnly = true;
+        } else if (options.behaviorType === 'server') {
+            this.isServer = true;
+            this.privateKey = options.behaviorOptions.privateKey;
+        }
     }
 
-    onSigningRequest: EventEmitter;
+    /**
+     * Used by tx and cert signer, obtains a private key given a passphrase, if not set, subscribeToAskPassphrase will be called
+     * @param address A public address
+     * @param passphrase Passphrase to unlock
+     */
+    getAccountKey(address: string, passphrase?: string): Promise<string> {
+        if (this.isReadOnly) {
+            throw new Error('This is a read only wallet, cannot get key to sign transactions');
+        } else if (this.isServer) {
+            return this.privateKey;
+        }
+        return super.getAccountKey(address, passphrase);
+    }
 
+
+    /**
+     * Configures a passphrase to lock and unlock keys
+     * @param passphrase A passphrase
+     */
+    configurePassphrase(passphrase: string) {
+        if (this.isReadOnly) {
+            return passphrase;
+        } else if (this.isServer) {
+            return 'no_passphrase_required_for_server_wallet'
+        }
+        super.configurePassphrase(passphrase);
+    }
+
+    /**
+     * Pull signing scenarios
+     * @param options 
+     */
+    async processSigningRequest(options: {
+        address: string,
+        signingAction: (pvk: any) => Promise<any>,
+    }): Promise<any> {
+        const passphrase = await this.subscribeToAskPassphrase();
+        const privateKey = await this.getAccountKey(options.address, passphrase);
+        const pvk = Buffer.from(privateKey.substring(2), 'hex');
+
+        return options.signingAction(pvk);
+    }
+
+    /**
+     * Push signing scenarios
+     * @param error 
+     * @param payload 
+     */
     async handleCallRequests(error, payload: IJsonRpcRequest) {
+        if (!this.walletConnector) {
+            throw new Error('No WalletConnect has been loaded.')
+        }
         console.log(`WalletConnectConnex ${payload.method}`);
         switch (payload.method) {
             case 'eth_sendTransaction':
@@ -79,34 +145,4 @@ export class ConnexWCVendorWallet extends ConnexVendorWallet
                 break;
         }
     }
-
-
-    /**
-     * eth_sendTransaction
-     */
-    private async sendTransaction() {
-
-    }
-
-    /**
-     * eth_signTransaction
-     */
-    private async signTransaction() {
-
-    }
-
-    /**
-     * eth_sign
-     */
-    private async signMessage() {
-
-    }
-
-    /**
-     * personal_sign
-     */
-    private async signPersonalMessage() {
-
-    }
-
 }

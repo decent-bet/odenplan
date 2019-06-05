@@ -1,3 +1,2 @@
 export * from './wallet';
-export * from './ConnexVendorWallet';
-export * from './ConnexWCVendorWallet';
+export * from './ProviderWallet';
