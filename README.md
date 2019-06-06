@@ -105,18 +105,12 @@ const wallet = new ProviderWallet({
 
 // Subscribe to eth_signTransaction
 wallet.onSigningRequest.on('SIGN_TX', (params: any[]) => {
-    // ... sign tx code goes here
-    wallet.processSigningRequest(address, async (pvk) => {
-        // ... sign here
-    });
+    // ... call connex signing service
 });
 
 // Subscribe to eth_sendTransaction
 wallet.onSigningRequest.on('SEND_TX', (params: any[]) => {
-    // ... send tx code goes here
-    wallet.processSigningRequest(address, async (pvk) => {
-        // ... sign here
-    });
+    // ... call connex signing service
 });
 ```
 
