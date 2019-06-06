@@ -16,14 +16,6 @@ await wallet.configurePassphrase('q2w3e4r5t6y7');
 
 ```
 
-## Subscribe to ask passphrase
-
-```typescript
-wallet.subscribeToAskPassphrase = new Promise((resolve, reject) => {
-    //  Display UI dialog and return passphrase
-});
-```
-
 ## Create a wallet account
 
 ```typescript
