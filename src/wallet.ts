@@ -36,8 +36,8 @@ export interface VendorWallet {
  * A simple VET wallet
  */
 export class Wallet implements VendorWallet {
-    public keyStore: KeyStore;
-    public keyHandler: KeyHandler;
+    public keyStore: any;
+    public keyHandler: any;
 
 
     constructor() {

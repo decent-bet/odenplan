@@ -16,15 +16,7 @@ await wallet.configurePassphrase('q2w3e4r5t6y7');
 
 ```
 
-## Subscribe to ask passphrase
-
-```typescript
-wallet.subscribeToAskPassphrase = new Promise((resolve, reject) => {
-    //  Display UI dialog and return passphrase
-});
-```
-
-## Create a wallet account
+### Create a wallet account
 
 ```typescript
 // if passphrase not set, it will ask for passphrase using subscribeToAskPassphrase
@@ -35,14 +27,14 @@ const { publicAddress, mnemonic } = await wallet.createAccount(null, true);
 ```
 
 
-## Registers a wallet account
+### Registers a wallet account
 
 ```typescript
 // if user owns a private key, use registerAccount to import wallet
 await wallet.registerAccount(address, privateKey, passphrase);
 ```
 
-## Subscribe to ask passphrase
+### Subscribe to ask passphrase
 
 ```typescript
 wallet.subscribeToAskPassphrase = new Promise((resolve, reject) => {
@@ -50,7 +42,7 @@ wallet.subscribeToAskPassphrase = new Promise((resolve, reject) => {
 });
 ```
 
-## Get account key (used with connex)
+### Get account key (used with connex)
 
 ```typescript
 let wallet = new ProviderWallet();
@@ -113,12 +105,12 @@ const wallet = new ProviderWallet({
 
 // Subscribe to eth_signTransaction
 wallet.onSigningRequest.on('SIGN_TX', (params: any[]) => {
-    // ... sign tx code goes here
+    // ... call connex signing service
 });
 
 // Subscribe to eth_sendTransaction
 wallet.onSigningRequest.on('SEND_TX', (params: any[]) => {
-    // ... send tx code goes here
+    // ... call connex signing service
 });
 ```
 
