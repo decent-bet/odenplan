@@ -73,7 +73,12 @@ export class ProviderWallet
         address: string,
         signingAction: (pvk: any) => Promise<any>,
     }): Promise<any> {
-        const passphrase = await this.subscribeToAskPassphrase();
+        let passphrase = '';
+        if (this.subscribeToAskPassphrase) {
+            passphrase = await this.subscribeToAskPassphrase();
+        } else if (!this.isServer) {
+            throw new Error('Missing subscribeToAskPassphrase')
+        }
         const privateKey = await this.getAccountKey(options.address, passphrase);
         const pvk = Buffer.from(privateKey.substring(2), 'hex');
 
