@@ -8,6 +8,8 @@ A simple VET wallet
 
 **Wallet**
 
+↳  [ProviderWallet](providerwallet.md)
+
 ## Implements
 
 * [VendorWallet](../interfaces/vendorwallet.md)
@@ -46,7 +48,7 @@ A simple VET wallet
 
 ⊕ **new Wallet**(): [Wallet](wallet.md)
 
-*Defined in [wallet.ts:72](https://github.com/decent-bet/odenplan/blob/7c1275c/src/wallet.ts#L72)*
+*Defined in [wallet.ts:40](https://github.com/decent-bet/odenplan/blob/95a0049/src/wallet.ts#L40)*
 
 **Returns:** [Wallet](wallet.md)
 
@@ -60,7 +62,7 @@ ___
 
 **● askPassphraseValue**: *`string`*
 
-*Defined in [wallet.ts:80](https://github.com/decent-bet/odenplan/blob/7c1275c/src/wallet.ts#L80)*
+*Defined in [wallet.ts:48](https://github.com/decent-bet/odenplan/blob/95a0049/src/wallet.ts#L48)*
 
 ___
 <a id="keyhandler"></a>
@@ -69,7 +71,7 @@ ___
 
 **● keyHandler**: *`KeyHandler`*
 
-*Defined in [wallet.ts:72](https://github.com/decent-bet/odenplan/blob/7c1275c/src/wallet.ts#L72)*
+*Defined in [wallet.ts:40](https://github.com/decent-bet/odenplan/blob/95a0049/src/wallet.ts#L40)*
 
 ___
 <a id="keystore"></a>
@@ -78,7 +80,7 @@ ___
 
 **● keyStore**: *`KeyStore`*
 
-*Defined in [wallet.ts:71](https://github.com/decent-bet/odenplan/blob/7c1275c/src/wallet.ts#L71)*
+*Defined in [wallet.ts:39](https://github.com/decent-bet/odenplan/blob/95a0049/src/wallet.ts#L39)*
 
 ___
 <a id="subscribetoaskpassphrase"></a>
@@ -89,7 +91,7 @@ ___
 
 *Implementation of [VendorWallet](../interfaces/vendorwallet.md).[subscribeToAskPassphrase](../interfaces/vendorwallet.md#subscribetoaskpassphrase)*
 
-*Defined in [wallet.ts:85](https://github.com/decent-bet/odenplan/blob/7c1275c/src/wallet.ts#L85)*
+*Defined in [wallet.ts:53](https://github.com/decent-bet/odenplan/blob/95a0049/src/wallet.ts#L53)*
 
 Callback to set passphrase
 
@@ -107,7 +109,7 @@ ___
 
 *Implementation of [VendorWallet](../interfaces/vendorwallet.md).[subscribeToSigning](../interfaces/vendorwallet.md#subscribetosigning)*
 
-*Defined in [wallet.ts:90](https://github.com/decent-bet/odenplan/blob/7c1275c/src/wallet.ts#L90)*
+*Defined in [wallet.ts:58](https://github.com/decent-bet/odenplan/blob/95a0049/src/wallet.ts#L58)*
 
 Callback to approve or reject signing
 
@@ -128,7 +130,7 @@ ___
 
 *Implementation of [VendorWallet](../interfaces/vendorwallet.md).[configurePassphrase](../interfaces/vendorwallet.md#configurepassphrase)*
 
-*Defined in [wallet.ts:103](https://github.com/decent-bet/odenplan/blob/7c1275c/src/wallet.ts#L103)*
+*Defined in [wallet.ts:71](https://github.com/decent-bet/odenplan/blob/95a0049/src/wallet.ts#L71)*
 
 Configures a passphrase to lock and unlock keys
 
@@ -147,7 +149,7 @@ ___
 
 ▸ **createAccount**(passphrase?: *`string`*, canReturnMnemonicValue?: *`boolean`*): `Promise`<`any`>
 
-*Defined in [wallet.ts:195](https://github.com/decent-bet/odenplan/blob/7c1275c/src/wallet.ts#L195)*
+*Defined in [wallet.ts:163](https://github.com/decent-bet/odenplan/blob/95a0049/src/wallet.ts#L163)*
 
 Creates a new account
 
@@ -169,7 +171,7 @@ ___
 
 *Implementation of [VendorWallet](../interfaces/vendorwallet.md).[getAccountKey](../interfaces/vendorwallet.md#getaccountkey)*
 
-*Defined in [wallet.ts:138](https://github.com/decent-bet/odenplan/blob/7c1275c/src/wallet.ts#L138)*
+*Defined in [wallet.ts:106](https://github.com/decent-bet/odenplan/blob/95a0049/src/wallet.ts#L106)*
 
 Used by tx and cert signer, obtains a private key given a passphrase, if not set, subscribeToAskPassphrase will be called
 
@@ -189,7 +191,7 @@ ___
 
 ▸ **getAccounts**(): `Promise`<`string`[]>
 
-*Defined in [wallet.ts:148](https://github.com/decent-bet/odenplan/blob/7c1275c/src/wallet.ts#L148)*
+*Defined in [wallet.ts:116](https://github.com/decent-bet/odenplan/blob/95a0049/src/wallet.ts#L116)*
 
 Gets a list of all accounts registered
 
@@ -202,7 +204,7 @@ ___
 
 ▸ **internalCreateAccount**(canReturnMnemonicValue?: *`boolean`*): `Promise`<`object` \| `object`>
 
-*Defined in [wallet.ts:170](https://github.com/decent-bet/odenplan/blob/7c1275c/src/wallet.ts#L170)*
+*Defined in [wallet.ts:138](https://github.com/decent-bet/odenplan/blob/95a0049/src/wallet.ts#L138)*
 
 Create account and returns a public address
 
@@ -221,7 +223,7 @@ ___
 
 ▸ **registerAccount**(address: *`string`*, privateKey: *`string`*, passphrase?: *`string`*): `Promise`<`any`>
 
-*Defined in [wallet.ts:159](https://github.com/decent-bet/odenplan/blob/7c1275c/src/wallet.ts#L159)*
+*Defined in [wallet.ts:127](https://github.com/decent-bet/odenplan/blob/95a0049/src/wallet.ts#L127)*
 
 Writes a private key given a public address
 
@@ -242,7 +244,7 @@ ___
 
 ▸ **validatePassphrase**(passphrase: *`string`*, promiseFn: *`Promise`<`any`>*): `Promise`<`any`>
 
-*Defined in [wallet.ts:116](https://github.com/decent-bet/odenplan/blob/7c1275c/src/wallet.ts#L116)*
+*Defined in [wallet.ts:84](https://github.com/decent-bet/odenplan/blob/95a0049/src/wallet.ts#L84)*
 
 Asks for passphrase and if succesful, executes promise
 
